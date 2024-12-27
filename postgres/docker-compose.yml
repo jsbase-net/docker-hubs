@@ -1,0 +1,37 @@
+services:
+  postgres:
+    container_name: jsbase_postgres_local
+    image: sonnm/postgres-common
+    shm_size: 1g
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: jsbase
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - jsbase_postgres_local:/var/lib/postgresql/data
+    networks:
+      - jsbase
+  pgadmin:
+    container_name: jsbase_pgadmin_local
+    image: dpage/pgadmin4:8.0
+    shm_size: 1g
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@postgres.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - jsbase_pgadmin_local:/var/lib/pgadmin
+    networks:
+      - jsbase
+networks:
+  jsbase:
+volumes:
+  jsbase_postgres_local:
+  jsbase_pgadmin_local:
